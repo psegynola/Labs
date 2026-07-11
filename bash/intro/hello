@@ -7,3 +7,5 @@ echo "Hello Phil"
 echo "This is $USER and his name is $myvar"
 
 echo "This script name is $0"
+
+echo "This is a parameter: $1"
