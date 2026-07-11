@@ -3,3 +3,7 @@
 myvar=phil
 
 echo "Hello Phil"
+
+echo "This is $USER and his name is $myvar"
+
+echo "This script name is $0"
