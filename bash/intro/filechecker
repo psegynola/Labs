@@ -1,0 +1,9 @@
+#!/bin/bash
+
+
+if [[ -f "$1" ]]; then
+	echo "This is a file"
+else
+	echo "This is not a file"
+	exit 1
+fi
