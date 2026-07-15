@@ -5,3 +5,9 @@ start) echo "Starting ......" ;;
 stop) echo "Stopping....." ;;
 *) echo "Use start or stop"
 esac
+
+case $2 in
+start) echo "Starting ......" ;;
+stop) echo "Stopping....." ;;
+*) echo "Use start or stop"
+esac
