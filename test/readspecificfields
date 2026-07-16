@@ -1,0 +1,5 @@
+#!/bin/bash
+
+while IFS=: read -r user password uid gid comment home shell; do
+    echo "$user (UID: $uid) uses $shell"
+done < /etc/passwd

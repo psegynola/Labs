@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for file in /home/pdivine/labs/bash/intro/*; do
+	[[ -f "$file" ]] || continue
+	echo "Processing: $file"
+done

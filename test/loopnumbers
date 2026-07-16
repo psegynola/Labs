@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for i in {1..10}; do
+	[[ $i -le 5 ]] && continue
+	echo "$i"
+done

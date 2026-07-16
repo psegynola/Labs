@@ -1,0 +1,10 @@
+#!/bin/bash
+
+greet() {
+	echo "Hello $1"
+	echo "This is my house $2"
+	echo "$#"
+	echo "$@"
+}
+
+greet philip chivers mayowa
