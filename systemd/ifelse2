@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [[ -s $1 ]]; then
+	echo "the file has content"
+elif [[ -f $1 ]]; then
+	echo "the file has no content"
+else
+	echo "nothing exists"
+fi
+
+
+
