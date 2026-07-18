@@ -1,0 +1,35 @@
+Docker Image
+
+1. Base image
+   FROM
+
+2. System configuration
+   RUN
+   ENV
+   ARG
+   LABEL
+
+3. Working directory
+   WORKDIR
+
+4. Dependency layer
+   COPY dependency file
+   RUN install dependencies
+
+5. Application layer
+   COPY application
+
+6. Runtime configuration
+   EXPOSE
+   USER
+   CMD / ENTRYPOINT
+
+-------------------------
+
+docker run
+
+↓
+
+Container
+
+7. Writable container layer
