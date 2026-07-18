@@ -1,0 +1,2 @@
+renamefiles: takes 1.txt and renames it backup 1.txt
+newloop: takes backup_1.txt and renames it 1.txt

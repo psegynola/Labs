@@ -1,0 +1,5 @@
+#!/bin/bash
+
+while IFS=: read -r user id province country career; do
+	echo "$user(ID: $id) lives in $province, $country and is a $career"
+done < ~/labs/test/specificfields/testdocument
