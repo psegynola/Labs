@@ -14,4 +14,4 @@ EXPOSE
 ↓
 USER (if applicable)
 ↓
-CMD or ENTRYPOINT
+CMD or ENTRYPOINT = the start command
