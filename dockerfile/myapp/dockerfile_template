@@ -1,0 +1,17 @@
+FROM
+↓
+(optional LABEL, ARG, ENV)
+↓
+WORKDIR
+↓
+COPY dependency files
+↓
+RUN install dependencies
+↓
+COPY application
+↓
+EXPOSE
+↓
+USER (if applicable)
+↓
+CMD or ENTRYPOINT

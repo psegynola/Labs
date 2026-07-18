@@ -1,0 +1,17 @@
+FROM
+↓
+(optional LABEL, ARG, ENV)
+↓
+WORKDIR
+↓
+COPY dependency files = file SPACE location
+↓
+RUN install dependencies
+↓
+COPY application = source on host SPACE destination on image
+↓
+EXPOSE
+↓
+USER (if applicable)
+↓
+CMD or ENTRYPOINT
