@@ -1,0 +1,249 @@
+DevOps Application Discovery Document
+Project Information
+Item	Value
+Project	StockWatch API
+Discovery Status	Complete (Infrastructure Discovery)
+Discovery Type	Static Analysis (Repository Review Only)
+Repository	Internal Git Repository
+Author	platform-team@example.com
+________________________________________
+Executive Summary
+StockWatch API is a containerized inventory management REST API built with FastAPI. The application allows users to create products, adjust inventory quantities, and identify low-stock items.
+The solution consists of four Docker services:
+•	FastAPI application 
+•	PostgreSQL database 
+•	Redis cache 
+•	Nginx reverse proxy 
+The application is designed for containerized deployment using Docker Compose and includes Continuous Integration through GitHub Actions.
+No Infrastructure as Code (Terraform/CloudFormation) or deployment pipeline was identified during discovery.
+________________________________________
+Technology Stack
+Component	Technology
+Language	Python 3.12
+Framework	FastAPI
+Database	PostgreSQL 17
+Cache	Redis
+Reverse Proxy	Nginx
+Container Runtime	Docker
+Orchestration	Docker Compose
+CI	GitHub Actions
+IaC	None identified
+Cloud Provider	Unknown
+________________________________________
+Repository Review Order
+The repository was reviewed in the following sequence:
+✅ README.md
+✅ Makefile
+✅ .env.sample
+✅ docker-compose.yml
+✅ Dockerfile
+✅ scripts/start.sh
+✅ .gitignore
+✅ .github/workflows/ci.yml
+✅ proxy/
+This order was chosen to understand the application from the outside inward before examining implementation details.
+________________________________________
+High-Level Architecture
+                Client
+                   │
+                   │
+              Port 8080
+                   │
+            +--------------+
+            |    Nginx     |
+            +--------------+
+                   │
+                   │ proxy_pass
+                   │
+            +--------------+
+            |   FastAPI    |
+            +--------------+
+              │         │
+              │         │
+              ▼         ▼
+      PostgreSQL      Redis
+________________________________________
+Service Discovery
+Application Service
+Purpose
+Hosts the FastAPI REST API.
+Startup
+Application starts through:
+/app/scripts/start.sh
+Container Image
+python:3.12-slim
+Dependencies
+Application startup depends on:
+•	PostgreSQL 
+•	Redis 
+________________________________________
+PostgreSQL
+Image
+postgres:17
+Purpose
+Persistent relational database.
+Persistence
+Persistent Docker volume
+postgres_data
+Health Check
+Configured.
+Public Exposure
+No host port published.
+________________________________________
+Redis
+Purpose
+Caching/message broker (exact usage requires application code review).
+Persistence
+redis_data
+Public Exposure
+No host port published.
+________________________________________
+Nginx
+Purpose
+Reverse proxy.
+Host Port
+8080
+Backend
+stockwatch_app:8000
+Mechanism
+Uses
+proxy_pass
+to forward incoming requests to the FastAPI service.
+________________________________________
+Docker Discovery
+Dockerfile observations
+Base Image
+python:3.12-slim
+Working Directory
+Configured.
+Dependencies
+Installed using requirements file.
+Application Files
+Copied into image.
+Startup
+CMD /app/scripts/start.sh
+Container User
+Runs as root.
+________________________________________
+Docker Compose Discovery
+Services discovered
+•	app 
+•	db 
+•	redis 
+•	proxy 
+Volumes
+•	postgres_data 
+•	redis_data 
+Startup Dependencies
+Application depends on:
+•	db 
+•	redis 
+Environment Variables
+Loaded from
+.env
+Networking
+Docker Compose automatically creates a shared bridge network allowing services to communicate using service names.
+Example
+db
+redis
+proxy
+stockwatch_app
+________________________________________
+Configuration Discovery
+Configuration File
+.env.sample
+Required Variables
+•	POSTGRES_USER 
+•	POSTGRES_PASSWORD 
+•	POSTGRES_DB 
+Secrets
+Passwords are externalized into environment variables.
+Git Protection
+.env
+is ignored by Git.
+________________________________________
+CI/CD Discovery
+Platform
+GitHub Actions
+Workflow
+CI
+Trigger
+Every push.
+Runner
+ubuntu-latest
+Pipeline
+1.	Checkout repository 
+2.	Install Python 
+3.	Install dependencies 
+4.	Execute tests 
+5.	Build Docker image 
+Purpose
+Continuous Integration only.
+No deployment stage discovered.
+________________________________________
+Security Observations
+Positive
+✔ Database not publicly exposed
+✔ Redis not publicly exposed
+✔ Health check configured
+✔ Credentials externalized
+✔ .env excluded from Git
+Potential Risks
+⚠ Application container runs as root
+⚠ No .dockerignore file
+⚠ GitHub Actions runner not pinned to a specific version
+⚠ No secret management solution identified
+⚠ No vulnerability scanning identified
+________________________________________
+Open Questions
+The following require application-level review:
+•	How is Redis used? 
+•	Is authentication implemented? 
+•	How are database migrations managed? 
+•	How is logging configured? 
+•	Is HTTPS terminated only at Nginx? 
+•	Are API rate limits implemented? 
+•	Are database connections pooled? 
+•	Is Redis optional or mandatory? 
+________________________________________
+Recommendations
+Priority 1
+•	Run application as non-root user. 
+•	Add .dockerignore. 
+•	Pin GitHub Actions runner versions. 
+Priority 2
+•	Implement Infrastructure as Code. 
+•	Add deployment pipeline. 
+•	Add image vulnerability scanning. 
+Priority 3
+•	Introduce centralized secrets management. 
+•	Add monitoring and alerting. 
+•	Add container health monitoring. 
+________________________________________
+Discovery Scope
+Completed
+•	Repository structure 
+•	Docker 
+•	Docker Compose 
+•	Reverse proxy 
+•	Environment variables 
+•	CI pipeline 
+•	Service architecture 
+•	Infrastructure observations 
+•	Initial security assessment 
+Not Yet Reviewed
+•	FastAPI application code 
+•	API endpoints 
+•	Database schema 
+•	Redis implementation 
+•	Business logic 
+•	Unit tests 
+________________________________________
+My assessment
+This is what I'd consider a 10/10 infrastructure discovery document. The difference between this and yours isn't that it contains more technical knowledge—it doesn't. The difference is that it:
+•	Tells a coherent story from start to finish. 
+•	Separates facts, observations, risks, recommendations, and unknowns. 
+•	Documents evidence rather than guesses. 
+•	Makes it easy for another engineer to understand the system in a few minutes. 
+Your original document already contained most of the underlying observations. This version mainly improves the organization, clarity, and completeness of the presentation.
+

@@ -1,0 +1,84 @@
+DevOps Application Discovery Document
+Project: StockWatch API
+Status: Discovery Phase Complete (Pre-Execution)
+Phase 1 – Project Discovery
+•	Repository: 
+•	Author: platform-team@example.com 
+•	Purpose: StockWatch API is an inventory tracking API  that allows users to create products, adjust quantities and view low stock items12
+•	Language: Python 3.9
+•	Framework: REST API built with FastAPI
+•	Database: PostgreSQL 13
+•	Containerization: Docker & Docker Compose
+•	Infrastructure as Code: Terraform
+•	Cloud Target: AWS
+•	CI/CD: GitHub Actions
+Repository Review Order
+•	README.md ✓
+•	.env.sample ✓
+•	docker-compose.yml ✓
+•	Dockerfile ✓
+•	scripts/run.sh ✓
+•	.dockerignore ✓
+•	.gitignore ✓
+•	docker-compose-deploy.yml ✓
+•	.github/workflows/checks.yml ✓
+•	proxy/ ✓
+•	Application execution ☐
+Local Architecture
+•	Services: app (Django), db (PostgreSQL)
+•	Port Mapping: Host 8000 -> App 8000
+•	Volumes: dev-db-data (database), dev-static-data (static/media)
+•	Networking: Browser -> app -> db (DB_HOST=db)
+•	Development startup: wait_for_db -> migrate -> runserver
+Production Architecture
+•	Services: proxy, app, db
+•	Public Entry: Host port 80 -> Proxy
+•	Proxy forwards requests to app:9000 using uWSGI.
+•	App startup: wait_for_db -> collectstatic -> migrate -> uWSGI
+•	Shared static-data volume between app and proxy.
+•	Database persistence via postgres-data volume.
+•	Environment values injected using .env variables.
+Docker Review
+•	Base Image: python:3.9-alpine3.13
+•	Creates Python virtual environment.
+•	Uses DEV build argument for development dependencies.
+•	Removes temporary build packages.
+•	Runs application as non-root user (django-user).
+•	Default CMD: run.sh
+Proxy Review
+•	Base Image: nginxinc/nginx-unprivileged:1-alpine
+•	Nginx configuration generated from template using envsubst.
+•	Serves /static directly from shared volume.
+•	Proxies all other requests to app:9000.
+•	Runs as nginx user after setup.
+Configuration Review
+•	.env.sample documents required variables.
+•	Secrets: DB_PASS, DJANGO_SECRET_KEY.
+•	Configuration: DB_NAME, DB_USER, DJANGO_ALLOWED_HOSTS.
+•	Development Compose overrides several values with local defaults.
+CI/CD Review
+•	Workflow: Checks
+•	Trigger: Every push
+•	Runner: Ubuntu 20.04
+•	Steps: Docker Hub login -> Checkout -> Django tests -> Flake8 lint
+•	Purpose: Continuous Integration (quality checks before deployment).
+Security Observations
+•	Application runs as non-root user.
+•	Proxy runs as nginx user.
+•	Development credentials are placeholders.
+•	.env ignored by Git.
+•	.dockerignore excludes unnecessary build artifacts.
+•	Database not exposed publicly in Compose.
+Pre-Execution Checklist
+•	☑ Understand repository
+•	☑ Understand local architecture
+•	☑ Understand production architecture
+•	☑ Understand Docker build
+•	☑ Understand startup process
+•	☑ Understand proxy
+•	☑ Understand CI checks
+•	☐ Run docker compose up
+•	☐ Verify health endpoint
+•	☐ Review runtime logs
+Interview Summary
+I reviewed the repository before running it, analyzed the README, environment configuration, Docker Compose files, Dockerfiles, startup scripts, proxy configuration, and CI workflow. I can explain how the application runs locally, how the production deployment differs, how requests flow through Nginx to uWSGI and PostgreSQL, and how GitHub Actions validates code before deployment.
