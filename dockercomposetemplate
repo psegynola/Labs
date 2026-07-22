@@ -1,0 +1,19 @@
+version:
+
+services:
+  app:
+    build:
+    image:
+    container_name:
+    ports:
+    environment:
+    env_file:
+    volumes:
+    depends_on:
+    restart:
+    command:
+    networks:
+
+volumes:
+
+networks:
