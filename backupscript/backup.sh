@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#
+#this is for a test archive script
 if test -f /home/pdivine/archive.tar.gz
 then
 	echo "backup exists from yesterday"
